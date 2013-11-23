@@ -1,0 +1,10 @@
+---
+# Site configuration
+
+- hosts: all
+  sudo: true
+  roles:
+    - common
+  tags:
+    - basic_setup
+    - setup

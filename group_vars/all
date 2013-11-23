@@ -1,0 +1,45 @@
+http:
+  port: 80
+
+hadoop:
+  fs_default_FS_port: 8020
+  
+  hdfs_namenode_http_port: 50070
+  hdfs_namenode_ipc_port: 8020
+  hdfs_namenode_failover_address_port: 50090
+  
+  hdfs_datanode_http_port: 50075
+  hdfs_datanode_address_port: 50010
+  hdfs_datanode_ipc_port: 50020
+
+  hdfs_backup_http_port: 50105
+  hdfs_backup_ipc_port: 50100
+
+  mapred_task_tracker_http_port: 50060
+  mapred_task_tracker_ipc_port: 8021
+
+  mapred_job_tracker_http_port: 50030
+
+  journal_port: 8485
+  journal_http_port: 8480
+  journal_jmx_port: 9007
+
+  zookeeper_clientport: 2181
+  zookeeper_leader_port: 2888
+  zookeeper_election_port: 3888
+  zookeeper_zkfc_port: 2181
+
+ganglia:
+  # 8647
+  default_collector_port: 8647
+  # 8648
+  hadoop_datanode_collector_port: 8648
+  # 8649
+  hadoop_namenode_collector_port: 8649
+  # 8650
+  hadoop_miscnode_collector_port: 8650
+
+  multicast_address: 225.1.1.1
+
+  collector_query_port: 8651
+  collector_request_port: 8652

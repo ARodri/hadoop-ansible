@@ -1,0 +1,6 @@
+---
+# Site configuration
+- hosts: ganglia_monitors
+  sudo: true
+  roles:
+    - ganglia_monitor

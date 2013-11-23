@@ -1,0 +1,7 @@
+---
+# Site configuration
+
+- hosts: build_servers
+  sudo: true
+  roles:
+    - build

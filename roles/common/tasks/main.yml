@@ -1,0 +1,68 @@
+---
+- name: Installing SELinux python libraries
+  yum: name=libselinux-python state=latest
+
+- name: Disable SELinux in conf file
+  selinux: state=disabled
+
+- name: Deploy the Cloudera Repository for CDH4
+  copy: src=etc/cloudera-CDH4.repo dest=/etc/yum.repos.d/cloudera-CDH4.repo
+  tags: 
+    - setup_repos
+
+- name: Deploy the EPEL Repository for CentOS 6
+  copy: src=etc/epel-6-x86_64.repo dest=/etc/yum.repos.d/epel-6-x86_64.repo
+  tags:
+    - setup_repos
+
+- name: Update all packages
+  yum: name=* state=latest
+  tags:
+    - update_packages
+
+- name: Install yum utilities
+  yum: name=yum-utils state=latest
+
+- name: Install basic utilities (CentOS)
+  yum: name={{ item }} enablerepo=epel state=latest
+  with_items:
+    - htop
+    - curl
+    - dstat
+    - tree 
+    - screen 
+    - git
+    - svn
+    - git-svn
+    - gitk
+    - git-cvs
+    - telnet
+
+- name: Install java
+  yum: name={{ item }} state=latest
+  with_items:
+    - java-1.7.0-openjdk
+  tags:
+    - install_java
+
+- name: Install iptables
+  action: yum pkg=iptables state=latest
+  tags:
+    - install_iptables
+
+- name: Configure iptables
+  template: src=etc/iptables/iptables.j2 dest=/etc/sysconfig/iptables
+  tags:
+    - configure_iptables
+
+- name: Restart iptables
+  service: name=iptables state=restarted
+  tags:
+    - restart_iptables
+
+- name: Check iptables
+  service: name=iptables state=running
+  tags:
+    - restart_iptables
+    - check_running
+    - check_iptables

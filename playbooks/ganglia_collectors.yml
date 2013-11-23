@@ -1,0 +1,6 @@
+---
+# Site configuration
+- hosts: ganglia_collectors
+  sudo: true
+  roles:
+    - ganglia_collector

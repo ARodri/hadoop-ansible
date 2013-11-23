@@ -1,0 +1,30 @@
+---
+- name: Install Ganglia web dependencies
+  yum: name={{ item }} enablerepo=epel state=latest
+  with_items:
+    - php
+    - rrdtool
+  tags:
+    - install_ganglia_web
+
+- name: Create ganglia-web directories
+  shell: creates=/var/www/html/ganglia chdir=/var/www/html/ curl http://heanet.dl.sourceforge.net/project/ganglia/ganglia-web/3.5.10/ganglia-web-3.5.10.tar.gz | tar xz && ln -s ganglia-web-3.5.10 ganglia
+  tags:
+    - install_ganglia_web
+
+#- name: Setup ganglia-web makefile path
+#  shell: creates=/var/lib/ganglia-web/dwoo chdir=/var/www/ganglia sed -i "s=/var/www/html/ganglia=/var/www/ganglia=" Makefile
+#  tags:
+#    - install_ganglia_web
+
+#- name: Setup ganglia-web makefile user
+#  shell: creates=/var/lib/ganglia-web/dwoo chdir=/var/www/html/ganglia sed -i "s/APACHE_USER =  apache/APACHE_USER = www-data/" Makefile
+#  tags:
+#    - install_ganglia_web
+
+- name: Install ganglia-web
+  shell: creates=/var/lib/ganglia-web/dwoo chdir=/var/www/html/ganglia make install
+  notify:
+    - restart httpd
+  tags:
+    - install_ganglia_web

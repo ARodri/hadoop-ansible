@@ -1,0 +1,8 @@
+---
+# Site configuration
+
+- hosts: ganglia_webservers
+  sudo: true
+  roles:
+    - httpd
+    - ganglia_web

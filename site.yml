@@ -1,0 +1,7 @@
+---
+# Site configuration
+- include: playbooks/basic_setup.yml
+- include: playbooks/build_servers.yml
+- include: playbooks/ganglia_collectors.yml
+- include: playbooks/ganglia_monitors.yml
+- include: playbooks/ganglia_web.yml

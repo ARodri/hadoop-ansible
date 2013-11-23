@@ -1,0 +1,22 @@
+---
+- name: Install gmetad
+  action: yum pkg=ganglia-gmetad enablerepo=epel state=latest
+  tags:
+    - install_gmetad
+
+- name: Configure gmetad
+  action: template src=etc/ganglia/gmetad.conf.j2 dest=/etc/ganglia/gmetad.conf owner=root group=root
+  tags:
+    - configure_gmetad
+
+- name: Restart gmetad
+  service: name=gmetad state=restarted
+  tags:
+    - restart_gmetad
+
+- name: Verify gmetad is started
+  service: name=gmetad state=running
+  tags:
+    - check_gmetad
+    - restart_gmetad
+    - check_running

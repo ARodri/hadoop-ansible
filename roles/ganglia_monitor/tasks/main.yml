@@ -1,0 +1,25 @@
+---
+- name: Install gmond
+  yum: name={{ item }} enablerepo=epel state=latest
+  with_items:
+    - ganglia
+    - ganglia-gmond
+  tags:
+    - install_gmond
+
+- name: Configure gmond
+  action: template src=etc/ganglia/gmond.conf.j2 dest=/etc/ganglia/gmond.conf owner=root group=root
+  tags:
+    - configure_gmond
+
+- name: Restart gmond
+  service: name=gmond state=restarted
+  tags:
+    - restart_gmond
+
+- name: Ensure gmond is running
+  action: service name=gmond state=running
+  tags: 
+    - restart_gmond
+    - check_gmond
+    - check_running

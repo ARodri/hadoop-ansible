@@ -1,0 +1,24 @@
+---
+- name: Install httpd
+  yum: name={{ item }} state=latest
+  with_items:
+    - apache2
+  tags:
+    - install_httpd
+
+- name: Configure hostname in apache configuration
+  action: template src=etc/httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+  tags:
+    - configure_httpd
+
+- name: Restart httpd
+  service: name=httpd state=restarted
+  tags:
+    - restart_httpd
+
+- name: Check httpd
+  service: name=httpd state=running
+  tags:
+    - restart_httpd
+    - check_httpd
+    - check_running

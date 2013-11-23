@@ -1,0 +1,5 @@
+[epel]
+name=EPEL for CentOS 6 (64bit)
+baseurl=http://dl.fedoraproject.org/pub/epel/6/x86_64/
+gpgkey =http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6
+gpgcheck = 1
