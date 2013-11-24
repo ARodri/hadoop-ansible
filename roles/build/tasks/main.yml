@@ -1,6 +1,6 @@
 ---
 - name: Install compilers (CentOS)
-  action: yum name=$item state=latest
+  action: yum name={{ item }} state=latest
   with_items:
     - gcc-c++
     - make
