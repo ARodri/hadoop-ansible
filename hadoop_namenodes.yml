@@ -1,0 +1,6 @@
+---
+
+- hosts: hadoop_namenodes
+  sudo: true
+  roles:
+    - hadoop_namenode

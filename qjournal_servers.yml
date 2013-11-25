@@ -1,0 +1,6 @@
+---
+
+- hosts: qjournal_servers
+  sudo: true
+  roles: 
+    - qjournal

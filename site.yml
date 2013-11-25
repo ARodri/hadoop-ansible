@@ -1,7 +1,10 @@
 ---
 # Site configuration
-- include: playbooks/basic_setup.yml
-- include: playbooks/build_servers.yml
-- include: playbooks/ganglia_collectors.yml
-- include: playbooks/ganglia_monitors.yml
-- include: playbooks/ganglia_web.yml
+- include: basic_setup.yml
+- include: build_servers.yml
+- include: ganglia_collectors.yml
+- include: ganglia_monitors.yml
+- include: ganglia_web.yml
+- include: zookeepers.yml
+- include: qjournal_servers.yml
+- include: hadoop_namenodes.yml

@@ -1,6 +1,6 @@
 [hadoop_namenodes]
-hadoop01
-hadoop02
+hadoop01 is_primary=true
+hadoop02 is_primary=false
 
 [hadoop_datanodes]
 hadoop03
@@ -9,14 +9,14 @@ hadoop05
 
 [hadoop_miscnodes:children]
 zookeeper_servers
-journal_servers
+qjournal_servers
 
 [zookeeper_servers]
-hadoop06
-hadoop07
-hadoop08
+hadoop06 zoo_id=1
+hadoop07 zoo_id=2
+hadoop08 zoo_id=3
 
-[journal_servers]
+[qjournal_servers]
 hadoop06
 hadoop07
 hadoop08

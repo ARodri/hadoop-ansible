@@ -1,0 +1,5 @@
+---
+- hosts: zookeeper_servers
+  sudo: true
+  roles:
+    - zookeeper

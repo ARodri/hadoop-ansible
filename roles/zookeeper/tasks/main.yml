@@ -1,0 +1,29 @@
+---
+
+- name: Install zookeeper server
+  yum: name=zookeeper-server state=latest
+  tags:
+    - install_zookeeper
+
+- name: Configure zookeeper
+  template: src=zoo.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
+  tags:
+    - configure_zookeeper
+
+- name: Initialize zookeeper
+  shell: creates=/var/lib/zookeeper/myid service zookeeper-server init --myid={{zoo_id}}
+    - configure_zookeeper
+
+- name: Stop zookeeper
+  service: name=zookeeper-server state=stopped
+  tags:
+    - stop_zookeeper
+
+- name: Verify zookeeper is running
+  service: name=zookeeper-server state=running
+  tags:
+    - restart_zookeeper
+    - check_zookeeper
+    - check_running
+
+

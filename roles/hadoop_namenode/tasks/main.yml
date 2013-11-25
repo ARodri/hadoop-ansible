@@ -1,0 +1,94 @@
+--- 
+
+- name: Install namenode and jobtracker packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - hadoop-0.20-mapreduce-jobtrackerha
+    - hadoop-hdfs-namenode
+    - hadoop-hdfs-zkfc
+    - hadoop-0.20-mapreduce-zkfc
+  tags:
+    - install_namenode
+
+- name: Configure
+  template: src=roles/common/templates/etc/hadoop_ha_conf/{{ item }}.j2 dest=/etc/hadoop/conf/{{ item }}
+  with_items:
+    - core-site.xml
+    - hadoop-metrics.properties
+    - hadoop-metrics2.properties
+    - hdfs-site.xml
+    - log4j.properties
+    - mapred-site.xml
+    - slaves
+    - ssl-client.xml.example
+    - ssl-server.xml.example
+  tags:
+    - configure_namenode
+
+- name: Create data directory for the namenode metadata
+  file: path={{ item }} owner=hdfs group=hdfs state=directory
+  with_items: hadoop.dfs_namenode_name_dir
+  tags:
+    - init_namenode
+
+- name: Create the data directory for the jobtracker ha
+  file: path={{ item }} owner=mapred group=mapred state=directory
+  with_items: hadoop.mapred_job_tracker_persist_jobstatus_dir
+  tags:
+    - init_namenode
+
+- name: Stop namenode zkfc
+  service: name={{ item }} state=stopped
+  with_items:
+    - hadoop-hdfs-zkfc
+    - hadoop-0.20-mapreduce-zkfc
+  tags:
+    - init_namenode
+    - stop_namenode_zkfc
+
+- name: Stop namenode services
+  service: name={{ item }} state=stopped
+  with_items:
+    - hadoop-0.20-mapreduce-jobtrackerha
+    - hadoop-hdfs-namenode
+  tags:
+    - init_namenode
+    - stop_namenode
+
+- name: Format namenode as primary
+  shell: creates=/usr/lib/hadoop/namenode.formatted su - hdfs -c "yes | hadoop namenode -format" && touch /usr/lib/hadoop/namenode.formatted
+  when: "'{{ is_primary }}' == 'true'"
+  tags:
+    - init_namenode
+
+- name: Start primary namenode
+  service: name={{ item }} state=started
+  with_items:
+    - hadoop-0.20-mapreduce-jobtrackerha
+    - hadoop-hdfs-namenode
+  when: "'{{ is_primary }}' == 'true'"
+  tags:
+    - init_namenode
+
+- name: Format namenode as secondary
+  shell: creates=/usr/lib/hadoop/namenode.formatted su - hdfs -c "yes | hadoop namenode -bootstrapStandby" && touch /usr/lib/hadoop/namenode.formatted
+  when: "'{{ is_primary }}' == 'false'"
+  tags:
+    - init_namenode
+
+- name: Start namenode services
+  service: name={{ item }} state=started
+  with_items:
+    - hadoop-0.20-mapreduce-jobtrackerha
+    - hadoop-hdfs-namenode
+  tags:
+    - init_namenode
+    - start_namenode
+
+- name: Start namenode zkfc
+  service: name={{ item }} state=started
+  with_items:
+    - hadoop-hdfs-zkfc
+    - hadoop-0.20-mapreduce-jobtrackerha
+  tags:
+    - start_namenode_zkfc

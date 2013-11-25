@@ -1,0 +1,37 @@
+---
+
+- name: Install qjournal
+  yum: name=hadoop-hdfs-journalnode state=latest
+  tags:
+    - install_qjournal
+
+- name: Create folder for Journaling
+  file: path={{ hadoop.dfs_journalnode_edits_dir }} state=directory owner=hdfs group=hdfs
+  tags: 
+    - install_qjournal
+
+- name: Copy hadoop configuration files
+  template: src=roles/common/templates/etc/hadoop_ha_conf/{{ item }}.j2 dest=/etc/hadoop/conf/{{ item }}
+  with_items:
+    - core-site.xml
+    - hadoop-metrics2.properties
+    - hdfs-site.xml
+    - log4j.properties
+    - mapred-site.xml
+    - slaves
+    - ssl-client.xml.example
+    - ssl-server.xml.example
+  tags:
+    - configure_qjournal
+
+- name: Stop qjournal service
+  service: name=hadoop-hdfs-journalnode state=stopped
+  tags:
+    - stop_qjournal
+
+- name: Start qjournal service
+  service: name=hadoop-hdfs-journalnode state=started
+  tags:
+    - start_qjournal
+    - healthcheck
+  
